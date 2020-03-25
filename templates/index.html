@@ -1,0 +1,297 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Logs Simplified</title>
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/dropzone.min.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body>
+        
+<h1>Logs Simplified</h1>
+
+<form action="{{ url_for('upload') }}" enctype="multipart/form-data" method="POST" class="dropzone" id="myDropzone">
+
+<!--  All checkboxes enabled by default. --> 
+    <table>
+        <!--  Table row. --> 
+        <tr>
+            <td>
+                <span title="
+                Loss of data meaning:
+                •	Uncorrectable: Shows medium errors on drives 
+                    o	12/31/12 10:09:16: 271=Uncorrectable medium error logged for VD 00/0 at 59c5426 (on PD 02(e0x20/s2) at 11f4426)            
+                •	Puncturing: Lists instances of punctured stripes 
+                    o	12/30/12 19:33:56:  97=Puncturing bad block on PD 01(e0x20/s1) at 11f4426
+                ">
+                    <fieldset>
+                        <legend>Loss of data:</legend>
+                        <input type="checkbox" name="puncturing" value="puncturing"> puncturing 
+                        <input type="checkbox" name="uncorrectable" value="uncorrectable"> uncorrectable 
+                    </fieldset>
+                </span>
+            </td>
+            <td>
+                <span title="
+                HDD removed meaning:
+                •	Failed: Shows when a component fails: 
+                    o	10/11/19 17:59:47: C0:EVT#03092-10/11/19 17:59:47: 114=State change on PD 01(e0x20/s1) from ONLINE(18) to FAILED(11)
+                    NOTE: failed can also be used for other components, like batteries.
+
+                    ">
+                    <fieldset>
+                        <legend>HDD removed:</legend>
+                        <input type="radio" name="removed" value="removed"> removed 
+                        <input type="radio" name="failed" value="failed"> failed
+                    </fieldset>
+                </span>
+            </td>            
+            <td>
+                <span title="
+                HDD and connectivity issues meaning:
+                • Un-associated: Shows you any drives which may have been affected by a backplane/cable malfunction 
+                    o	09/14/10 16:06:52: SES_BackplaneMapping: Un-Associated device on enclPd 20 StsCode = 6 elmtType 17 elmtIndex 2 slotPd =2 SasAddr =0
+                • Phy Bad: Is the other type of error which may show up when there is a bad connection between the controller and the physical disk
+                    ">
+                    <fieldset>
+                        <legend>HDD and connectivity issues:</legend>
+                        <input type="checkbox" name="un-associated" value="un-associated"> un-associated 
+                        <input type="radio" name="phy bad" value="phy bad"> phy bad
+                    </fieldset>
+                </span>
+            </td>            
+        </tr>
+        <!--  New table row. --> 
+        <tr>
+            <td>
+                <span title="
+                Battery Keywords meaning:
+                •	Absolute: Shows actual battery charge state
+                •	Relative: Shows the battery’s relative state of charge. Sometimes replaces Absolute in newer controllers
+                •	Soh Bad: This shows you when a battery is failed 
+                    o	12/31/12 16:15:38: EVT#22380-12/31/12 16:15:38: 150=Battery needs replacement - SOH Bad
+                        ">
+                    <fieldset>
+                        <legend>Battery issues:</legend>
+                        <input type="radio" name="absolute" value="absolute"> absolute
+                        <input type="radio" name="relative" value="relative"> relative 
+                        <input type="radio" name="soh bad" value="soh bad"> soh bad 
+                    </fieldset>
+                </span>
+            </td>
+            <td>
+                <span title="
+                Something may need to be replaced:
+                · Predictive: Tells you when a Drive went pred fail 
+                    12/10/11  5:22:30:  96=Predictive failure: PD 00(e0x20/s0)
+                · Certified: Shows you if a drive is not certified 
+                    o EVT#14737-T37: 236=PD 00(e0xff/s0) is not a certified drive
+                    o EVT#14740-T37: 236=PD 01(e0xff/s1) is not a certified drive
+                    o EVT#14743-T37: 236=PD 02(e0xff/s2) is not a certified drive
+                    o EVT#14994-T37: 236=PD 03(e0xff/s3) is not a certified drive
+                        ">
+                    <fieldset>
+                        <legend>Something may need to be replaced:</legend>
+                        <input type="checkbox" name="predictive" value="predictive"> predictive
+                        <input type="radio" name="certified" value="certified"> certified 
+                        <input type="radio" name="failed" value="failed"> failed 
+                        <input type="radio" name="soh bad" value="soh bad"> soh bad 
+                        <input type="radio" name="removed" value="removed"> removed
+                        <input type="radio" name="phy bad" value="phy bad"> phy bad 
+                    </fieldset>
+                </span>
+            </td>          
+            <td>
+                <span title="
+                Monitor and review items on this group:
+                · Unexpected Sense: Shows you sense key errors 
+                    o Normal Sense Keys are 6/29/00 on the backplane and the occasional 5/24/00
+                · State Change: Tells when WHEN a drive fell offline 
+                    o 12/21/12 21:49:36: 114=State change on PD 02(e0x20/s2) from ONLINE(18) to FAILED(11)
+                · Badlba: Allows you to isolate bad logical block addresses. Key elements are sense key, DEVID[x], and LBA number 
+                    o Raw Sense for PD 5: f0 00 03 01 1f 44 26 0a 00 00 00 00 11 00 81 80 00 9d. DEV_REC:Medium Error DevId[5]. BadLba=11f4426
+                        ">
+                    <fieldset>
+                        <legend>Monitor and review items on this group:</legend>
+                        <input type="checkbox" name="state change" value="state change"> state change
+                        <input type="checkbox" name="unexpected sense" value="unexpected sense"> unexpected sense 
+                        <input type="checkbox" name="badlba" value="badlba"> phy bad 
+                        <input type="radio" name="relative" value="relative"> relative 
+                        <input type="radio" name="absolute" value="absolute"> absolute 
+                        <input type="radio" name="certified" value="certified"> certified
+                    </fieldset>
+                </span>
+            </td>          
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <span title="separate the query with commas (,) and use NO space between queries
+                e.g: badlba,unexpected sense,absolute">
+                    <p><b>Suggested list:</b><br>predictive,state change,uncorrectable,badlba,
+                        unexpected sense,absolute,un-associated,phy bad,
+                        soh bad,sas addr,puncturing,certified,package,
+                        failed,inserted,removed,: ar,: ld,:ar,:ld</p>
+                        <label for="title">Extra Issues to search: </label>
+                    <input type="text" id="extra" name="extra" /><br>
+                    
+                </span>
+            </td>
+        </tr>
+    </table>
+</form>
+<button id="submit" type="submit">Submit</button>
+<button onClick="window.location.href=window.location.href">Reset</button>
+
+<fieldset><p id=result></p></fieldset>
+<fieldset style=background-color:#d6e0f5>
+    <h3>Dictionary:</h3>
+    <ul type="disc">
+        <li>Predictive: Tells you when a Drive went pred fail </li>
+        <ul type="disc">
+        <li>12/10/11 5:22:30: 96=Predictive failure: PD 00(e0x20/s0)</li>
+        </ul>
+        <li>State Change: Tells when WHEN a drive fell offline </li>
+        <ul type="disc">
+        <li>12/21/12 21:49:36: 114=State change on PD 02(e0x20/s2) from ONLINE(18) to FAILED(11)</li>
+        </ul>
+        <li>Uncorrectable: Shows medium errors on drives </li>
+        <ul type="disc">
+        <li>12/31/12 10:09:16: 271=Uncorrectable medium error logged for VD 00/0 at 59c5426 (on PD 02(e0x20/s2) at 11f4426)</li>
+        </ul>
+        <li>Absolute: Shows actual battery charge state</li>
+        </ul>
+        <p><img src="{{ url_for('static', filename='img/absolute.jpg')}}" alt="Absolute State of Battery Charge" width="255" height="118" /></p>
+        <ul type="disc">
+        <li>Relative: Shows the battery&rsquo;s relative state of charge. Sometimes replaces Absolute in newer controllers</li>
+        <li>Un-associated: Shows you any drives which may have been affected by a backplane/cable malfunction </li>
+        <ul type="disc">
+        <li>09/14/10 16:06:52: SES_BackplaneMapping: Un-Associated device on enclPd 20 StsCode = 6 elmtType 17 elmtIndex 2 slotPd =2 SasAddr =0</li>
+        </ul>
+        <li>Phy Bad: Is the other type of error which may show up when there is a bad connection between the controller and the physical disk</li>
+        <li>Soh Bad: This shows you when a battery is failed </li>
+        <ul type="disc">
+        <li>12/31/12 16:15:38: EVT#22380-12/31/12 16:15:38: 150=Battery needs replacement - SOH Bad</li>
+        </ul>
+        <li>Unexpected Sense: Shows you sense key errors </li>
+        <ul type="disc">
+        <li>Normal Sense Keys are 6/29/00 on the backplane and the occasional 5/24/00</li>
+        </ul>
+        <li>Puncturing: Lists instances of punctured stripes </li>
+        <ul type="disc">
+        <li>12/30/12 19:33:56: 97=Puncturing bad block on PD 01(e0x20/s1) at 11f4426</li>
+        </ul>
+        <li>Certified: Shows you if a drive is not certified </li>
+        <ul type="disc">
+        <li>EVT#14737-T37: 236=PD 00(e0xff/s0) is not a certified drive</li>
+        <li>EVT#14740-T37: 236=PD 01(e0xff/s1) is not a certified drive</li>
+        <li>EVT#14743-T37: 236=PD 02(e0xff/s2) is not a certified drive</li>
+        <li>EVT#14994-T37: 236=PD 03(e0xff/s3) is not a certified drive</li>
+        </ul>
+        <li>SAS Addr: Shows device discovery, list of hard drives, and backplane information </li>
+        <ul type="disc">
+        <li>This can be vital for checking FW levels and verifying if drives have been removed or replaced</li>
+        <li>This can be used to determine a backplane&rsquo;s firmware revision</li>
+        </ul>
+        </ul>
+        <p><img src="{{ url_for('static', filename='img/sas_addr.jpg')}}" alt="Example of SAS_Addr" width="601" height="104" /></p>
+        <ul type="disc">
+        <li>Badlba: Allows you to isolate bad logical block addresses. Key elements are sense key, DEVID[x], and LBA number </li>
+        <ul type="disc">
+        <li>Raw Sense for PD 5: f0 00 03 01 1f 44 26 0a 00 00 00 00 11 00 81 80 00 9d. DEV_REC:Medium Error DevId[5]. BadLba=11f4426</li>
+        </ul>
+        <li>Package: Shows you the PERC firmware installed </li>
+        <ul type="disc">
+        <li>T10: C0:PACKAGE=25.5.2.0001</li>
+        <li>T11: C0:EVT#02953-T11: 261=Package version 25.5.2.0001</li>
+        </ul>
+        <li>Failed: Shows when a component fails: </li>
+        <ul type="disc">
+        <li>10/11/19 17:59:47: C0:EVT#03092-10/11/19 17:59:47: 114=State change on PD 01(e0x20/s1) from ONLINE(18) to FAILED(11)</li>
+        </ul>
+        <li>Inserted/Removed: Shows when a drive is discovered, installed, or removed. </li>
+        <ul type="disc">
+        <li>09/30/19 10:09:30: MPT_DeviceAddRemove: Device REMOVED - phy x0b DM_DeviceNotResponding: devHandle x0012 devId e path x0 cwqC:0 flags:f1400005 cp:0 cqd:0 tmActive0:0 tmReq0:0 tmActive1:0 tmReq1:0</li>
+        <li>09/30/19 10:09:30: DM_DevicePathRemoved: PD e Removed :DeviceCount=11</li>
+        <li>09/30/19 10:09:30: EVT#30640-09/30/19 10:09:30: 112=Removed: PD 0e(e0x20/s14)</li>
+        <li>09/30/19 10:09:30: EVT#30641-09/30/19 10:09:30: 248=Removed: PD 0e(e0x20/s14) Info: enclPd=20, scsiType=0, portMap=00, sasAddr=50014ee30014e986,0000000000000000</li>
+        <li>09/30/19 10:30:00: DM_DeviceInserted: tempdevId[110], DevHandle[1c]</li>
+        <li>09/30/19 10:30:00: iopiEvent: EVENT_SAS_DISCOVERY</li>
+        <li>09/30/19 10:30:13: PD Flags Size S N F Vendor Product Rev P C ID SAS Addr Port Phy DevH WU BFw BRev</li>
+        <li>09/30/19 10:30:13: -------------------------------------------------------------------------------------------------------------------</li>
+        <li>09/30/19 10:30:13: e f1400005 8bba0caf 0 0 0 TOSHIBA AL14SEB120N DH01 0 0 0e 5000039988737066 00 0b 1c 1 NA NA</li>
+        <li>09/30/19 10:30:13: EVT#30657-09/30/19 10:30:13: 91=Inserted: PD 0e(e0x20/s14)</li>
+        <li>09/30/19 10:30:13: EVT#30658-09/30/19 10:30:13: 247=Inserted: PD 0e(e0x20/s14) Info: enclPd=20, scsiType=0, portMap=00, sasAddr=5000039988737066,0000000000000000</li>
+        <li>09/30/19 10:30:13: EVT#30659-09/30/19 10:30:13: 114=State change on PD 0e(e0x20/s14) from UNCONFIGURED_BAD(1) to UNCONFIGURED_GOOD(0)</li>
+        <li>09/30/19 10:30:13: pdHspHistCheckInsertedPd: Start copy back from sparePd=0f to pd=e, changing entryType to ok</li>
+        </ul>
+        <li>Ar &amp; Ld: Shows configured Arrays and Logical Disks, including associated physical disks and RAID levels: </li>
+        <ul type="disc">
+        <li>T43: ARs configured: 1</li>
+        <li>T43: Ar 0: size=68b80000, activeLd=3, numPd=e, seq=0, powerSave=0 powerSaveInProgress=0 PDs: 00(20/0) 01(20/1) 02(20/2) 03(20/3) 04(20/4) 05(20/5) 06(20/6) 07(20/7) 08(20/8) 0e(20/14) 0a(20/10) 0c(20/12) 0b(20/11) 0d(20/13)</li>
+        <li>T43: LD 0: L=5 SS=128 Size=18fffc80 NL=14132 Status=3 DT=6218 BT=9851, Encr=0, prop=[ID=00,dcp=0d,ccp=0d,ap=0,dc=0,dbgi=0,S=0|0,dps=00,cps=fe]</li>
+        <li>T43: span 0: sBlk=00000000, nBlk=01ec4e80, ar=0</li>
+        <li>T43: LD 1: L=5 SS=128 Size=538580380 NL=14132 Status=3 DT=6218 BT=9851, Encr=0, prop=[ID=01,dcp=0d,ccp=0d,ap=0,dc=0,dbgi=0,S=0|0,dps=00,cps=fe]</li>
+        <li>T43: span 0: sBlk=01ec4e80, nBlk=66cbb180, ar=0</li>
+        </ul>
+        <li>&ldquo;PD 00&rdquo;, &ldquo;PD 01&rdquo;, etc: Shows you actions by and to individual disks </li>
+        <ul type="disc">
+        <li>In healthy arrays, you will probably only see patrol reads</li>
+        </ul>
+        </ul>
+</fieldset>
+
+<script type=text/javascript>
+
+Dropzone.options.myDropzone= {
+    url: '/upload',
+    autoProcessQueue: false,
+    uploadMultiple: true,
+    parallelUploads: 1,
+    maxFiles: 1,
+    addRemoveLinks: true,
+    autoDiscover: false,
+    init: function() {
+        var mydz = this;
+        document.getElementById("submit").addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            mydz.processQueue();
+        });
+        mydz.on('success', function(file, response) {
+            $('#result').html(response);
+        })
+        this.on("complete", function(file) { 
+            this.removeAllFiles(true); 
+        })
+    }
+}
+</script>
+
+</body>
+<footer align="center">
+    <b>By Paulo Silva - Jan/2020</b>
+    <br><i>Thanks to:
+        <br>- Paul Campbell for his assistance with the Dictionary
+        <br>- Sapna Francis for the search engine kernel</i>
+        <br>
+
+        <script>
+            function changeBg(color) {
+             var color = '#' + color;
+            document.body.style.background = color;
+        }
+        </script>
+        <button onclick="changeBg('ffc300')">Yellow Background</button>
+        <button onclick="changeBg('00ff12')">Green Background</button>
+        <button onclick="changeBg('1800ff')">Blue Background</button>
+        <button onclick="changeBg('555')">Grey Background</button>
+        <p style="background-color:Tomato;"><a href="mailto:paulo.s@dell.com">Feedback, suggestions, money are all Welcome!</a></p>
+</footer>
+</html>
