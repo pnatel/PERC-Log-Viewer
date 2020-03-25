@@ -82,7 +82,6 @@ def filter_array (input_list, substrList):
 # SPECIAL FUNCTIONS TO HANDLE/CONVERT THE FILE FROM THE DROPZONE JAVASCRIPT
 def filter_array_IO (io_file, substrList):
     list = IO_to_list(io_file)
-    print(type(io_file))
     return filter_array (list, substrList)
 
 def IO_to_list(io_file):
@@ -90,7 +89,6 @@ def IO_to_list(io_file):
     enc = buffer.readlines()
     enc = str(buffer.read(), 'utf-8')
     # print(str(buffer.readlines(), 'utf-8'))
-    # print (len(buffer))
     return enc.splitlines() # buffer.readlines() 
 # =============================
 

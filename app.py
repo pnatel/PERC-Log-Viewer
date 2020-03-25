@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from tty_module import filter_array_IO, filter_array
+from tty_module import filter_array_IO
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -16,10 +16,7 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    with request.files['file[0]'] as f:
-        stream = f.read() # .splitlines()
-    print (stream.decode())
-
+    f = request.files['file[0]']
     issue_list = ["predictive","state change","uncorrectable","badlba",
 	            "unexpected sense","absolute","relative","un-associated","phy bad",
 				"soh bad","sas addr","puncturing","certified","package",
@@ -44,11 +41,10 @@ def upload():
     else: 
         issue_combined = [""]
         print("Empty options")
-    print('issue comb', issue_combined, 'size', len(issue_combined))
+    print('issue comb', issue_combined)
 
-    # data = filter_array (stream, substrList=issue_combined)
-    # data = filter_array_IO (io_file=f, substrList=issue_combined)
-    # return data
+    data = filter_array_IO (io_file=f, substrList=issue_combined)
+    return data
 
 
 if __name__ == '__main__':
