@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
     <title>Logs Simplified</title>
-    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/dropzone.min.js')}}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone.min.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,9 +12,23 @@
         
 <h1>Logs Simplified</h1>
 
-<form action="{{ url_for('upload') }}" enctype="multipart/form-data" method="POST" class="dropzone" id="myDropzone">
+<h2>Select a file to upload</h2>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul class=flashes>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
+ 
+<form action="{{ url_for('upload') }}" enctype="multipart/form-data" method="POST"> 
+    
+<!--All checkboxes enabled by default. --> 
 
-<!--  All checkboxes enabled by default. --> 
     <table>
         <!--  Table row. --> 
         <tr>
@@ -145,11 +156,20 @@
             </td>
         </tr>
     </table>
+    <dl>
+		<p>
+			<input type="file" name="file" autocomplete="off" required>
+		</p>
+    </dl>
+    <p>
+        <!--
+        <input type="submit" value="Submit">
+        -->
+        <button id="submit" type="submit">Submit</button>
+        <button onClick="window.location.href=window.location.href">Reset</button>
+	</p>
 </form>
-<button id="submit" type="submit">Submit</button>
-<button onClick="window.location.href=window.location.href">Reset</button>
 
-<fieldset><p id=result></p></fieldset>
 <fieldset style=background-color:#d6e0f5>
     <h3>Dictionary:</h3>
     <ul type="disc">
@@ -246,33 +266,6 @@
         </ul>
         </ul>
 </fieldset>
-
-<script type=text/javascript>
-
-Dropzone.options.myDropzone= {
-    url: '/upload',
-    autoProcessQueue: false,
-    uploadMultiple: true,
-    parallelUploads: 1,
-    maxFiles: 1,
-    addRemoveLinks: true,
-    autoDiscover: false,
-    init: function() {
-        var mydz = this;
-        document.getElementById("submit").addEventListener("click", function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            mydz.processQueue();
-        });
-        mydz.on('success', function(file, response) {
-            $('#result').html(response);
-        })
-        this.on("complete", function(file) { 
-            this.removeAllFiles(true); 
-        })
-    }
-}
-</script>
 
 </body>
 <footer align="center">

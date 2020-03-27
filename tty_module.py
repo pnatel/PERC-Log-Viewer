@@ -19,7 +19,7 @@ def tty2list(fname, mode='r'):
 	"""
     with open(fname, mode) as file:
         f_contents = []
-        f_contents = file.readlines()
+        f_contents = file.readlines() #.decode('utf-16')
         return f_contents
 
 def get_lines_with(input_list, substr):
@@ -41,7 +41,7 @@ def get_lines_with(input_list, substr):
     # print (input_list)
     lines = []
     for line in input_list:
-        print ('testing line: ', line)
+        # print ('testing line: ', line)
         if re.search(substr, line, re.IGNORECASE):
             lines.append(line)
             # print ('Line added. size of result: ', len(lines))
