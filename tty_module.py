@@ -20,7 +20,11 @@ def tty2list(fname, mode='r'):
     with open(fname, mode) as file:
         f_contents = []
         f_contents = file.readlines() #.decode('utf-16')
-        return f_contents
+        # clean = []
+        # for line in f_contents:
+        #     clean += line.replace('0xff', 'n')
+        #     # print (len(clean), line)
+        return f_contents # clean
 
 def get_lines_with(input_list, substr):
     """
@@ -66,7 +70,20 @@ def filter_array (input_list, substrList):
     >>> filter_array(tty2list('./samples/RAID.Slot.1-1.log'),['predictive'])
     'PREDICTIVE found no records, <script>var coll = document.getElementsByClassName("collapsible");var i;for (i = 0; i < coll.length; i++) {coll[i].addEventListener("click", function() {this.classList.toggle("active");        var content = this.nextElementSibling;        if (content.style.maxHeight){          content.style.maxHeight = null;        } else {          content.style.maxHeight = content.scrollHeight + "px";        }       });    }    </script>'
 	"""
-    for_records = ""
+
+    for_records = '''
+    <!DOCTYPE HTML>
+    <html lang="en">
+    <head>
+        <title>PERC Logs Filtered Result page</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+    <h1>PERC Logs Filtered Result page</h1>
+    <p><i>Expand the blocks for analytical view</i></p>    
+    '''
     for i in range(len(substrList)):
         records = get_lines_with(input_list, substrList[i])
         if records:
@@ -76,6 +93,12 @@ def filter_array (input_list, substrList):
         else: 
             for_records += str(substrList[i]).upper() + " found no records, "
     for_records += '<script>var coll = document.getElementsByClassName("collapsible");var i;for (i = 0; i < coll.length; i++) {coll[i].addEventListener("click", function() {this.classList.toggle("active");        var content = this.nextElementSibling;        if (content.style.maxHeight){          content.style.maxHeight = null;        } else {          content.style.maxHeight = content.scrollHeight + "px";        }       });    }    </script>'
+    for_records += "</html>"
+
+    with open("./templates/result.html", 'w', errors='ignore') as hs:
+        hs.write(for_records)
+
+    print(for_records)
     return for_records    
 
 # ==============================

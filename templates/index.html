@@ -12,22 +12,9 @@
         
 <h1>Logs Simplified</h1>
 
-<h2>Select a file to upload</h2>
-<p>
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-		<ul class=flashes>
-		{% for message in messages %}
-		  <li>{{ message }}</li>
-		{% endfor %}
-		</ul>
-	  {% endif %}
-	{% endwith %}
-</p>
- 
 <form action="{{ url_for('upload') }}" enctype="multipart/form-data" method="POST"> 
     
-<!--All checkboxes enabled by default. --> 
+<!--All checkboxes not checked by default. --> 
 
     <table>
         <!--  Table row. --> 
@@ -145,30 +132,58 @@
             <td>
                 <span title="separate the query with commas (,) and use NO space between queries
                 e.g: badlba,unexpected sense,absolute">
-                    <p><b>Suggested list:</b><br>predictive,state change,uncorrectable,badlba,
-                        unexpected sense,absolute,un-associated,phy bad,
-                        soh bad,sas addr,puncturing,certified,package,
-                        failed,inserted,removed,: ar,: ld,:ar,:ld</p>
+                <fieldset>
+                    <legend><b>Suggested list:</b></legend>
+                        <p>
+                        predictive,state change,uncorrectable,badlba,unexpected sense,absolute,un-associated,phy bad,
+                        <br>soh bad,sas addr,puncturing,certified,package,failed,inserted,removed,: ar,: ld,:ar,:ld</p>
                         <label for="title">Extra Issues to search: </label>
                     <input type="text" id="extra" name="extra" /><br>
-                    
+                </fieldset>    
                 </span>
             </td>
+            <td> 
+                <span title="Ensure your text file has one of the following extensions:
+                'txt', 'log' or '134283266'">
+                <fieldset>
+                    <legend><b>Select a file to upload:</b></legend>
+                    <dl>
+                        <p>
+                            <input type="file" name="file" autocomplete="off" required>
+                        </p>
+                    </dl>
+                    <p>
+                        <!--
+                        <input type="submit" value="Submit">
+                        -->
+                        <button id="submit" type="submit">Submit</button>
+                        <button onClick="window.location.href=window.location.href">Reset</button>
+                    </p>
+                </fieldset>
+            </td>
+            <td><span title="Messages:">
+                <fieldset>
+                    <legend><b>Messages:</b></legend>
+                    <p>
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul class=flashes>
+                            {% for message in messages %}
+                            <li>{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {% endwith %}
+                    </p>
+                </fieldset>
+
+            </span></td>
         </tr>
     </table>
-    <dl>
-		<p>
-			<input type="file" name="file" autocomplete="off" required>
-		</p>
-    </dl>
-    <p>
-        <!--
-        <input type="submit" value="Submit">
-        -->
-        <button id="submit" type="submit">Submit</button>
-        <button onClick="window.location.href=window.location.href">Reset</button>
-	</p>
+   
 </form>
+
+<!--<fieldset>{{ results }}</fieldset>-->
 
 <fieldset style=background-color:#d6e0f5>
     <h3>Dictionary:</h3>
