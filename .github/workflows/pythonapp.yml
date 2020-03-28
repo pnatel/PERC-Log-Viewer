@@ -37,5 +37,4 @@ jobs:
 #         pytest
     - name: Test with doctest
       run: |
-        pip install doctest
         python tty_module.py
