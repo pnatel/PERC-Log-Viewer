@@ -64,12 +64,13 @@ def filter_array (input_list, substrList):
     -----------
     Function selftests:  
     >>> len(filter_array(tty2list('./samples/RAID.Slot.1-1.log'),['Puncturing']))
-    1444
+    1885
     >>> type(filter_array(tty2list('./samples/RAID.Slot.1-1.log'),['predictive']))
     <class 'str'>
-    >>> filter_array(tty2list('./samples/RAID.Slot.1-1.log'),['predictive'])
-    'PREDICTIVE found no records, <script>var coll = document.getElementsByClassName("collapsible");var i;for (i = 0; i < coll.length; i++) {coll[i].addEventListener("click", function() {this.classList.toggle("active");        var content = this.nextElementSibling;        if (content.style.maxHeight){          content.style.maxHeight = null;        } else {          content.style.maxHeight = content.scrollHeight + "px";        }       });    }    </script>'
-	"""
+    >>> filter_array(tty2list('./samples/RAID.Slot.1-1.log'),['predictive']).count('PREDICTIVE found no records')
+    1
+    """
+
 
     for_records = '''
     <!DOCTYPE HTML>
@@ -98,7 +99,7 @@ def filter_array (input_list, substrList):
     with open("./templates/result.html", 'w', errors='ignore') as hs:
         hs.write(for_records)
 
-    print(for_records)
+    # print(for_records)
     return for_records    
 
 # ==============================
